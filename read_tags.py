@@ -19,6 +19,12 @@ universal_to_ptb = {'SYM': ('#', '$', 'SYM'),
                     'INTJ': ('UH', ), 
                     'ADV': ('RB', 'RBR', 'RBS', 'WRB',)}
 
+ptb_to_universal = {}
+
+for universal_tag, ptb_tags in universal_to_ptb.items():
+    for ptb_tag in ptb_tags:
+        ptb_to_universal[ptb_tag] = universal_tag
+
 universal_tag_set = list(universal_to_ptb.keys())
 
 ptb_tag_set = [v for vals in universal_to_ptb.values() for v in vals]
@@ -47,6 +53,10 @@ def parse_file(fp, separator="===+", do_universal=False):
             continue
         words, tags = list(zip(*words))
         tags = [t.split("|")[0] for t in tags]
+
+        if do_universal:
+            tags = [ptb_to_universal[t] for t in tags]
+            
         yield words, tags
 
 
